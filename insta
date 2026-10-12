@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Frame</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--ink:#0E1726;--mute:#6B7690;--line:#DDE2EC;--acc:#2F5BFF;--heart:#FF3B6B;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1120;--card:#141C2E;--ink:#EEF1F8;--mute:#8E9AB5;--line:#26304A;--acc:#6C8CFF}}
+:root[data-theme="dark"]{--bg:#0B1120;--card:#141C2E;--ink:#EEF1F8;--mute:#8E9AB5;--line:#26304A;--acc:#6C8CFF}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 "Bricolage Grotesque",system-ui,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#app{max-width:470px;margin:0 auto;padding-bottom:84px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.logo{font-weight:800;font-size:26px;letter-spacing:-1.5px}
+.logo i{font-style:normal;color:var(--acc)}
+.stories{display:flex;gap:14px;overflow-x:auto;padding:4px 16px 14px;scrollbar-width:none}
+.st{flex:none;text-align:center;width:66px;font-size:12px}
+.ring{width:64px;height:64px;border-radius:50%;padding:3px;background:conic-gradient(var(--acc),var(--heart),#FFB020,var(--acc));margin-bottom:4px}
+.ring.seen{background:var(--line)}
+.av{width:100%;height:100%;border-radius:50%;border:3px solid var(--bg);display:grid;place-items:center;font-size:24px}
+.post{background:var(--card);border-radius:18px;margin:0 12px 16px;overflow:hidden;border:1px solid var(--line)}
+.ph{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.ph .av{width:34px;height:34px;border:0;font-size:17px;flex:none}
+.ph b{font-weight:600}.ph small{color:var(--mute);display:block;font-size:12px;line-height:1.1}
+.media{position:relative;aspect-ratio:1;background-size:cover;background-position:center;display:grid;place-items:center;font-size:96px;user-select:none;cursor:pointer}
+.pop{position:absolute;font-size:90px;color:#fff;opacity:0;pointer-events:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+.pop.go{animation:pop .7s ease-out}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1)}}
+.acts{display:flex;align-items:center;padding:6px 8px}
+.acts button{padding:6px;border-radius:10px;display:flex}
+.acts .sp{flex:1}
+svg.i{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.on svg.i{fill:currentColor}
+.like.on{color:var(--heart)}.save.on{color:var(--acc)}
+.body{padding:0 14px 12px}
+.body p{margin-top:2px}.body .more{color:var(--mute);font-size:13px;margin-top:4px;display:block}
+.cm{margin-top:6px;font-size:14px}
+.cmf{display:flex;gap:8px;margin-top:10px}
+.cmf input{flex:1;border:1px solid var(--line);background:var(--bg);color:inherit;border-radius:20px;padding:8px 14px;font:inherit}
+.cmf button{color:var(--acc);font-weight:600}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));z-index:6}
+nav div{max-width:470px;margin:0 auto;display:flex;justify-content:space-around}
+nav button{padding:8px 18px;color:var(--mute);border-radius:12px}
+nav button.cur{color:var(--ink)}
+nav button.cur svg.i{stroke-width:2.6}
+nav .plus{background:var(--acc);color:#fff;border-radius:12px;padding:8px 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:0 3px}
+.grid .media{font-size:38px;aspect-ratio:1}
+h2{font-size:20px;font-weight:800;letter-spacing:-.5px;padding:4px 16px 12px}
+.prof{display:flex;align-items:center;gap:20px;padding:4px 16px 14px}
+.prof .av{width:84px;height:84px;font-size:40px;flex:none;border:0}
+.nums{display:flex;gap:18px;text-align:center}.nums b{display:block;font-size:18px}.nums span{font-size:12px;color:var(--mute)}
+.bio{padding:0 16px 14px}.tabs{display:flex;border-top:1px solid var(--line)}
+.tabs button{flex:1;padding:10px;color:var(--mute)}.tabs button.cur{color:var(--ink);box-shadow:inset 0 -2px var(--ink)}
+.new{padding:0 16px}
+.prev{aspect-ratio:1;border-radius:18px;background-size:cover;background-position:center;display:grid;place-items:center;font-size:110px;margin-bottom:12px}
+.swatches{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto}
+.swatches button{flex:none;width:44px;height:44px;border-radius:12px;border:2px solid transparent}
+.swatches button.cur{border-color:var(--ink)}
+.row{display:flex;gap:8px;margin-bottom:12px}
+.btn{background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:600}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+textarea{width:100%;border:1px solid var(--line);background:var(--card);color:inherit;border-radius:14px;padding:12px;font:inherit;resize:none;margin-bottom:12px}
+.empty{text-align:center;color:var(--mute);padding:48px 24px}
+#modal{position:fixed;inset:0;background:rgba(5,8,16,.7);z-index:20;display:none;overflow-y:auto;padding:24px 0}
+#modal.open{display:block}#modal .post{max-width:440px;margin:0 auto}
+#story{position:fixed;inset:0;z-index:30;display:none;place-items:center;font-size:140px;color:#fff;cursor:pointer}
+#story.open{display:grid}
+#story .bar{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:14px;right:14px;height:3px;background:rgba(255,255,255,.35);border-radius:2px;overflow:hidden}
+#story .bar i{display:block;height:100%;width:0;background:#fff}
+#story.open .bar i{animation:fill 3s linear forwards}
+@keyframes fill{to{width:100%}}
+#story p{position:absolute;bottom:15%;font-size:20px;font-weight:600;padding:0 24px;text-align:center}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .2s;z-index:40;pointer-events:none}
+#toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav><div id="nav"></div></nav>
+<div id="modal"></div>
+<div id="story"></div>
+<div id="toast"></div>
+<script>
+const G=['linear-gradient(135deg,#FF9A8B,#FF6A88 55%,#FF99AC)','linear-gradient(135deg,#43E97B,#38F9D7)','linear-gradient(135deg,#667EEA,#764BA2)','linear-gradient(135deg,#F6D365,#FDA085)','linear-gradient(135deg,#0F2027,#2C5364)','linear-gradient(135deg,#FBC2EB,#A6C1EE)'];
+const ME={name:'you',emoji:'😎',bg:G[2]};
+const I={
+home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+heart:'<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-3 4.5 4.5 0 0 1 8 3c0 6-8 11-8 11z"/>',
+chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.2A8 8 0 1 1 21 12z"/>',
+send:'<path d="M22 3L11 14M22 3l-7 18-4-7-7-4z"/>',
+mark:'<path d="M6 3h12v18l-6-5-6 5z"/>',
+grid:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'};
+const ic=(n)=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let posts=[
+{id:1,user:'mira.codes',emoji:'🌅',bg:G[0],cap:'Golden hour from the rooftop. Worth the climb.',likes:248,comments:[['arun','Stunning colours!'],['dev.s','Where is this?']],t:'2h'},
+{id:2,user:'chai.diaries',emoji:'☕',bg:G[3],cap:'Third filter coffee of the morning. No regrets.',likes:132,comments:[['mira.codes','Same energy ☕']],t:'5h'},
+{id:3,user:'trail.notes',emoji:'🏔️',bg:G[4],cap:'Summit fog. Silence. Perfect.',likes:512,comments:[],t:'9h'},
+{id:4,user:'pixel.pooja',emoji:'🌿',bg:G[1],cap:'Plant corner update: the monstera is winning.',likes:87,comments:[['arun','Jealous of that leaf']],t:'1d'},
+{id:5,user:'arun',emoji:'🎧',bg:G[5],cap:'On repeat all weekend.',likes:64,comments:[],t:'2d'}];
+const people=[['mira.codes','🌅'],['chai.diaries','☕'],['trail.notes','🏔️'],['pixel.pooja','🌿'],['arun','🎧']];
+let st={tab:'home',ptab:'mine',open:new Set(),seen:new Set(),draft:{bg:G[0],img:null,emoji:'✨'},nid:100};
+try{const s=JSON.parse(localStorage.getItem('frame-mine')||'[]');s.forEach(p=>posts.unshift(p))}catch(e){}
+const save=()=>{try{localStorage.setItem('frame-mine',JSON.stringify(posts.filter(p=>p.user===ME.name&&p.id>=100).slice(0,6)))}catch(e){}};
+const bgOf=p=>p.img?`background-image:url(${p.img})`:`background:${p.bg}`;
+const $=s=>document.querySelector(s);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600)}
+ 
+function postHTML(p){
+ const cm=p.comments.length;
+ return `<article class="post" data-id="${p.id}">
+ <div class="ph"><div class="av" style="background:${p.bg}">${p.emoji}</div><div><b>${esc(p.user)}</b><small>${p.t} ago</small></div></div>
+ <div class="media" style="${bgOf(p)}" data-act="dbl">${p.img?'':p.emoji}<span class="pop">${ic('heart').replace('fill="none"','')}</span></div>
+ <div class="acts">
+  <button class="like ${p.liked?'on':''}" data-act="like" aria-label="Like" aria-pressed="${!!p.liked}">${ic('heart')}</button>
+  <button data-act="cm" aria-label="Comment">${ic('chat')}</button>
+  <button data-act="share" aria-label="Share">${ic('send')}</button><span class="sp"></span>
+  <button class="save ${p.saved?'on':''}" data-act="save" aria-label="Save" aria-pressed="${!!p.saved}">${ic('mark')}</button>
+ </div>
+ <div class="body"><b>${p.likes+(p.liked?1:0)} likes</b>
+ <p><b>${esc(p.user)}</b> ${esc(p.cap)}</p>
+ ${cm?`<button class="more" data-act="cm">${st.open.has(p.id)?'Hide':'View all'} ${cm} comment${cm>1?'s':''}</button>`:''}
+ ${st.open.has(p.id)?p.comments.map(c=>`<div class="cm"><b>${esc(c[0])}</b> ${esc(c[1])}</div>`).join('')+`<div class="cmf"><input placeholder="Add a comment" aria-label="Add a comment" maxlength="140"><button data-act="send">Post</button></div>`:''}
+ </div></article>`}
+ 
+function gridHTML(list){
+ if(!list.length)return '<div class="empty">Nothing here yet.</div>';
+ return `<div class="grid">${list.map(p=>`<div class="media" role="button" tabindex="0" data-id="${p.id}" data-act="peek" style="${bgOf(p)}">${p.img?'':p.emoji}</div>`).join('')}</div>`}
+ 
+function render(){
+ const a=$('#app');let h='';
+ if(st.tab==='home'){
+  h=`<header><span class="logo">frame<i>.</i></span><button data-act="theme" aria-label="Toggle theme">◐</button></header>
+  <div class="stories">${[[ME.name,ME.emoji]].concat(people).map((s,i)=>`<button class="st" data-act="story" data-i="${i}"><div class="ring ${st.seen.has(i)?'seen':''}"><div class="av" style="background:${i?G[i%6]:ME.bg}">${s[1]}</div></div>${i?esc(s[0]).slice(0,10):'Your story'}</button>`).join('')}</div>
+  ${posts.map(postHTML).join('')}`}
+ else if(st.tab==='explore'){
+  h=`<header><span class="logo">explore</span></header>${gridHTML(posts)}`}
+ else if(st.tab==='new'){
+  const d=st.draft;
+  h=`<header><span class="logo">new post</span></header><div class="new">
+  <div class="prev" style="${d.img?`background-image:url(${d.img})`:`background:${d.bg}`}">${d.img?'':d.emoji}</div>
+  <div class="row"><label class="btn alt" style="cursor:pointer">Choose photo<input id="file" type="file" accept="image/*" hidden></label>
+  ${d.img?'<button class="btn alt" data-act="clearimg">Remove photo</button>':''}</div>
+  <div class="swatches">${G.map((g,i)=>`<button class="${!d.img&&d.bg===g?'cur':''}" style="background:${g}" data-act="bg" data-i="${i}" aria-label="Background ${i+1}"></button>`).join('')}</div>
+  <textarea id="cap" rows="3" maxlength="200" placeholder="Write a caption…"></textarea>
+  <button class="btn" data-act="publish">Share post</button></div>`}
+ else{
+  const mine=posts.filter(p=>p.user===ME.name),sv=posts.filter(p=>p.saved);
+  const list=st.ptab==='mine'?mine:sv;
+  h=`<header><span class="logo">${ME.name}</span></header>
+  <div class="prof"><div class="av" style="background:${ME.bg}">${ME.emoji}</div>
+  <div class="nums"><div><b>${mine.length}</b><span>posts</span></div><div><b>1.2k</b><span>followers</span></div><div><b>310</b><span>following</span></div></div></div>
+  <div class="bio"><b>Your name here</b><br><span style="color:var(--mute)">Sharing small moments. Edit this bio in your own build.</span></div>
+  <div class="tabs"><button class="${st.ptab==='mine'?'cur':''}" data-act="ptab" data-t="mine" aria-label="My posts">${ic('grid')}</button><button class="${st.ptab==='saved'?'cur':''}" data-act="ptab" data-t="saved" aria-label="Saved posts">${ic('mark')}</button></div>
+  ${list.length?gridHTML(list):`<div class="empty">${st.ptab==='mine'?'Share your first post with the + button.':'Tap the bookmark on any post to save it here.'}</div>`}`}
+ a.innerHTML=h;
+ $('#nav').innerHTML=[['home','home'],['explore','search'],['new','plus'],['me','user']].map(([t,i])=>`<button class="${st.tab===t?'cur':''} ${t==='new'?'plus':''}" data-act="tab" data-t="${t}" aria-label="${t}">${ic(i)}</button>`).join('');
+ const f=$('#file');if(f)f.onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();r.onload=()=>{const cap=$('#cap').value;st.draft.img=r.result;render();$('#cap').value=cap};r.readAsDataURL(fl)};
+}
+ 
+function find(el){const a=el.closest('.post');return a?posts.find(p=>p.id==a.dataset.id):null}
+function like(p,force){if(force&&p.liked)return;p.liked=!p.liked}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-act]');
+ if(!b){if(e.target.id==='modal'){$('#modal').classList.remove('open')}return}
+ const act=b.dataset.act,p=find(b);
+ if(act==='tab'){st.tab=b.dataset.t;scrollTo(0,0);render()}
+ else if(act==='like'){like(p);rerender(b,p)}
+ else if(act==='dbl'){if(e.detail>=2){like(p,true);const pop=b.querySelector('.pop');pop.classList.remove('go');void pop.offsetWidth;pop.classList.add('go');rerender(null,p,true)}}
+ else if(act==='save'){p.saved=!p.saved;rerender(b,p);toast(p.saved?'Saved':'Removed from saved')}
+ else if(act==='cm'){st.open.has(p.id)?st.open.delete(p.id):st.open.add(p.id);rerender(b,p)}
+ else if(act==='send'){const i=b.previousElementSibling,v=i.value.trim();if(!v)return;p.comments.push([ME.name,v]);rerender(b,p)}
+ else if(act==='share'){toast('Link copied');try{navigator.clipboard.writeText(location.href)}catch(x){}}
+ else if(act==='peek'){const q=posts.find(x=>x.id==b.dataset.id);$('#modal').innerHTML=postHTML(q);$('#modal').classList.add('open')}
+ else if(act==='ptab'){st.ptab=b.dataset.t;render()}
+ else if(act==='bg'){st.draft.bg=G[b.dataset.i];st.draft.img=null;const c=$('#cap').value;render();$('#cap').value=c}
+ else if(act==='clearimg'){st.draft.img=null;const c=$('#cap').value;render();$('#cap').value=c}
+ else if(act==='publish'){
+  const cap=$('#cap').value.trim();
+  if(!cap&&!st.draft.img){toast('Add a photo or a caption first');return}
+  posts.unshift({id:st.nid++,user:ME.name,emoji:ME.emoji,bg:st.draft.bg,img:st.draft.img,cap:cap||'',likes:0,comments:[],t:'0m'});
+  save();st.draft={bg:G[0],img:null,emoji:'✨'};st.tab='home';render();scrollTo(0,0);toast('Posted')}
+ else if(act==='story'){const i=+b.dataset.i,s=[[ME.name,ME.emoji],...people][i];st.seen.add(i);
+  const el=$('#story');el.style.background=G[(i+2)%6];el.innerHTML=`<div class="bar"><i></i></div>${s[1]}<p>${i?esc(s[0])+' · just now':'Tap Plus to add to your story'}</p>`;el.classList.add('open');
+  clearTimeout(st.tm);st.tm=setTimeout(closeStory,3000)}
+ else if(act==='theme'){const r=document.documentElement,d=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'light':'dark'}
+});
+function closeStory(){$('#story').classList.remove('open');if(st.tab==='home')render()}
+$('#story').onclick=()=>{clearTimeout(st.tm);closeStory()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#modal').classList.remove('open');closeStory()}
+ if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.act==='peek'){e.preventDefault();e.target.click()}
+ if(e.key==='Enter'&&e.target.matches('.cmf input'))e.target.nextElementSibling.click()});
+function rerender(btn,p,dbl){
+ const m=$('#modal');
+ if(m.classList.contains('open')){m.innerHTML=postHTML(p);return}
+ const y=scrollY;const old=document.querySelector(`.post[data-id="${p.id}"]`);
+ if(old){const t=document.createElement('div');t.innerHTML=postHTML(p);const n=t.firstElementChild;
+  if(dbl){n.querySelector('.pop').className='pop go'}old.replaceWith(n);
+  const inp=n.querySelector('.cmf input');if(inp&&btn&&btn.dataset.act==='cm')inp.focus({preventScroll:true})}
+ else render();scrollTo(0,y)}
+render();
+</script>
+</body>
+</html>
+ 
